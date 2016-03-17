@@ -1,0 +1,26 @@
+doctype html
+html
+  head
+    link(rel='stylesheet', href='/css/style.css')
+    title #{title}
+  body
+
+    form(action="/file-upload" class="dropzone" id="my-awesome-dropzone" method="post", enctype="multipart/form-data")
+      input(type="file" name="file")
+
+    .medias-list
+      ul
+
+    .js--templates
+      li.image
+        img
+
+
+    script(src='/socket.io/socket.io.js')
+    script(src='/bower_components/jquery/dist/jquery.min.js')
+    script(src='/bower_components/foundation/js/foundation.min.js')
+    script(src='/js/libs/dropzone.js')
+
+    script(src='/js/index.js')
+
+
