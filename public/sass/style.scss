@@ -39,9 +39,11 @@ body {
 }
 
 .medias-list{
-	pointer-events:none;
+	//pointer-events:none;
 	li{
-		pointer-events:none;
+		//pointer-events:none;
+		top:0;
+		left:0;
 		width:20%;
 		position: absolute;
 	}

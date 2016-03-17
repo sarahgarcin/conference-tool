@@ -6764,9 +6764,8 @@ body {
   #my-awesome-dropzone div {
     display: none; }
 
-.medias-list {
-  pointer-events: none; }
-  .medias-list li {
-    pointer-events: none;
-    width: 20%;
-    position: absolute; }
+.medias-list li {
+  top: 0;
+  left: 0;
+  width: 20%;
+  position: absolute; }
