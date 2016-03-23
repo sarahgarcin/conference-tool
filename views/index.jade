@@ -5,11 +5,16 @@ html
     title #{title}
   body
 
-    form(action="/file-upload" class="dropzone" id="my-awesome-dropzone" method="post", enctype="multipart/form-data")
-      input(type="file" name="file")
+    .drop-files-container
+
+    form(enctype="multipart/form-data" id="form")
+     input(type="file" name="files[]" multiple="multiple")
+
 
     .medias-list
       ul
+
+    .ligne
 
     .js--templates
       li.image
@@ -21,7 +26,6 @@ html
     script(src='/bower_components/jquery-ui/jquery-ui.min.js')
     script(src='/js/libs/jquery.ui.touch-punch.min.js')
     script(src='/bower_components/foundation/js/foundation.min.js')
-    script(src='/js/libs/dropzone.js')
 
     script(src='/js/index.js')
 

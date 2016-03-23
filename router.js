@@ -3,6 +3,7 @@ var url = require('url')
 var fs = require('fs-extra');
 var multipart = require('connect-multiparty');
 var multipartMiddleware = multipart();
+var formidable = require('formidable');
 
 
 module.exports = function(app,io,m){
@@ -23,27 +24,33 @@ module.exports = function(app,io,m){
   };
 
   function postFile(req, res) {
-    var id = convertToSlug(req.files.file.name);
-    fs.readFile(req.files.file.path, function (err, data) {
-      var newPath = __dirname + "/uploads/"+req.files.file.name;
-      fs.writeFile(newPath, data, function (err) {
-        //write Json File to save data
-        var jsonFile = 'uploads/lyon.json';
-        var data = fs.readFileSync(jsonFile,"UTF-8");
-        var jsonObj = JSON.parse(data);
-        var jsonAdd = { "name" : req.files.file.name, "id":id};
-        jsonObj["files"].push(jsonAdd);
-        var jsonString = JSON.stringify(jsonObj, null, 4);
-        fs.writeFile(jsonFile, jsonString, function(err) {
-          if(err) {
-            console.log(err);
-          } else {
-            console.log("The file was saved!");
-            io.sockets.emit("newMedia", {path: newPath, name:req.files.file.name, id: id});
-          }
+    for(var i= 0; i<req.files.files.length; i++){
+      if(req.files.files[i].size > 0){
+        var name = req.files.files[i].name;
+        var id = convertToSlug(name);
+        var newPath = __dirname + "/uploads/"+name;
+        console.log(name);
+        fs.readFile(req.files.files[i].path, function (err, data) {
+          fs.writeFile(newPath, data, function (err) {
+            //write Json File to save data
+            var jsonFile = 'uploads/lyon.json';
+            var data = fs.readFileSync(jsonFile,"UTF-8");
+            var jsonObj = JSON.parse(data);
+            var jsonAdd = { "name" : name, "id":id};
+            jsonObj["files"].push(jsonAdd);
+            var jsonString = JSON.stringify(jsonObj, null, 4);
+            fs.writeFile(jsonFile, jsonString, function(err) {
+              if(err) {
+                console.log(err);
+              } else {
+                console.log("New file -> The file was saved!");
+                io.sockets.emit("newMedia", {path: newPath, name:name, id: id});
+              }
+            });
+          });
         });
-      });
-    });
+      }
+    }
   };
 
 

@@ -13,6 +13,7 @@ module.exports = function(app, io){
 		socket.on('dropPosition', onDropPosition);
 		socket.on('dragMediaPos', function(pos){
 			socket.broadcast.emit("mediaDragPosition", pos);
+			socket.emit("mediaDragPositionForAll", pos);
 
 			//Save position in json
 		  var jsonFile = 'uploads/lyon.json';
@@ -22,12 +23,13 @@ module.exports = function(app, io){
 			  if (jsonObj["files"][i].id == pos.id){
 			  	jsonObj["files"][i]["xPos"] = pos.x;
 			  	jsonObj["files"][i]["yPos"] = pos.y;
+			  	jsonObj["files"][i]["zPos"] = pos.z;
 			  	var jsonString = JSON.stringify(jsonObj, null, 4);
 		      fs.writeFile(jsonFile, jsonString, function(err) {
 		        if(err) {
 		            console.log(err);
 		        } else {
-		            //console.log("The file was saved!");
+
 		        }
 		      });
 			  }
@@ -48,7 +50,9 @@ module.exports = function(app, io){
 			var id = jsonObj['files'][i].id;
 			var xPos = jsonObj['files'][i].xPos;
 			var yPos = jsonObj['files'][i].yPos;
-			socket.emit("listMedias", {name:name, id:id, xPos:xPos, yPos:yPos});
+			var zPos = jsonObj['files'][i].zPos;
+			var random = jsonObj['files'][i].random;
+			socket.emit("listMedias", {name:name, id:id, xPos:xPos, yPos:yPos, zPos:zPos, random:random});
 		}
 	}
 
@@ -63,12 +67,14 @@ module.exports = function(app, io){
 		  if (jsonObj["files"][i].id == mouse.id){
 		  	jsonObj["files"][i]["xPos"] = mouse.mediaX;
 		  	jsonObj["files"][i]["yPos"] = mouse.mediaY;
+		  	jsonObj["files"][i]["zPos"] = mouse.mediaZ;
+		  	jsonObj["files"][i]["random"] = mouse.random;
 		  	var jsonString = JSON.stringify(jsonObj, null, 4);
 	      fs.writeFile(jsonFile, jsonString, function(err) {
 	        if(err) {
 	            console.log(err);
 	        } else {
-	            console.log("The file was saved!");
+	            console.log("file drop -> The file was saved!");
 	        }
 	      });
 		  }
