@@ -132,7 +132,7 @@ function onListMedias(data){
     	socket.emit("dragMediaPos", {x: posX, y:posY, id:id, z:zIndex});
     },
     stop: function() {
-
+    	socket.emit('takeScreenShot');
     }
   });
 }
@@ -201,7 +201,7 @@ function onNewMedia(data){
     	socket.emit("dragMediaPos", {x: posX, y:posY,  z:zIndex, id:id});
     },
     stop: function() {
-
+    	socket.emit('takeScreenShot');
     }
   });
 }
@@ -217,7 +217,8 @@ function onMediaPosition(mouse){
 		})
 		.removeClass('no-position')
 		.attr("data-index", mouse.mediaZ)
-		;
+	;
+	socket.emit('takeScreenShot');
 	
 }
 
