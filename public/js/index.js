@@ -56,25 +56,64 @@ function init(){
 }
 
 function onListMedias(data){
-	// console.log(data);
-	var mediaItem = $(".js--templates .image").clone(false); 
 	var path = "../"+data.name;
 	var id = data.id;
 	zIndex = data.zPos;
+	var ext = data.name.split('.').pop();
+	var mediaItem;
 
-	mediaItem
-	  .find( 'img')
-	    .attr('src', path)
-	  .end()
-	  .attr('id', id)
-	  .css({
-	  	"top":data.yPos,
-	  	"left":data.xPos,
-	  	"z-index":data.zPos,
-	  	"transform":"rotate("+data.random+"deg)",
-	  	"display":"block"
-	  })
-  ;
+	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif"){
+		mediaItem = $(".js--templates .image").clone(false);
+		mediaItem
+		  .find( 'img')
+		    .attr('src', path)
+		  .end()
+		  .attr('id', id)
+		  .css({
+		  	"top":data.yPos,
+		  	"left":data.xPos,
+		  	"z-index":data.zPos,
+		  	"transform":"rotate("+data.random+"deg)",
+		  	"display":"block"
+		  });
+	}
+
+	if(ext == 'mp4' || ext == "avi" || ext == "ogg" || ext == "mov" || ext == "webm"){
+		mediaItem = $(".js--templates .video").clone(false);
+		mediaItem
+		  .find( 'source')
+		    .attr('src', path)
+		  .end()
+		  .attr('id', id)
+		  .css({
+		  	"top":data.yPos,
+		  	"left":data.xPos,
+		  	"z-index":data.zPos,
+		  	"transform":"rotate("+data.random+"deg)",
+		  	"display":"block"
+		  });
+	}
+
+	if(ext == 'pdf'){
+		mediaItem = $(".js--templates .pdf").clone(false);
+		mediaItem
+		  .find('a')
+		    .attr('href', path)
+		    .attr('title', data.name)
+		    .attr('target', '_blank')
+		    .append(data.name)
+		  .end()
+			.attr('id', id)
+		  .css({
+		  	"top":data.yPos,
+		  	"left":data.xPos,
+		  	"z-index":data.zPos,
+		  	"transform":"rotate("+data.random+"deg)",
+		  	"display":"block"
+		  });
+	}
+
+
   $('.medias-list').prepend(mediaItem);
 
   //imageRatio(mediaItem);
@@ -99,9 +138,13 @@ function onListMedias(data){
 }
 
 function onNewMedia(data){
-	var mediaItem = $(".js--templates .image").clone(false); 
 	var path = "../"+data.name;
 	var id = data.id;
+	var ext = data.name.split('.').pop();
+	var mediaItem;
+	
+	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif"){
+		mediaItem = $(".js--templates .image").clone(false);
 		mediaItem
 		  .find( 'img')
 		    .attr('src', path)
@@ -110,26 +153,57 @@ function onNewMedia(data){
 		  .attr('id', id)
 		  .css({
 		  	"zIndex": zIndex
-		  })
-	  ;
-	  $('.medias-list').prepend(mediaItem);
-	  
-	  //draggable media
-	  mediaItem.draggable({
-	    start: function() {
-	    	zIndex ++;
-	    },
-	    drag: function(event) {
-	    	// console.log(event);
-	    	var offset = $(this).offset();
-        var posX = offset.left;
-        var posY = offset.top;
-	    	socket.emit("dragMediaPos", {x: posX, y:posY,  z:zIndex, id:id});
-	    },
-	    stop: function() {
+		  });
+	}
 
-	    }
-	  });
+	if(ext == 'mp4' || ext == "avi" || ext == "ogg" || ext == "mov" || ext == "webm"){
+		mediaItem = $(".js--templates .video").clone(false);
+		mediaItem
+		  .find('source')
+		    .attr('src', path)
+		  .end()
+		  .addClass('no-position')
+		  .attr('id', id)
+		  .css({
+		  	"zIndex": zIndex
+		  });
+	}
+
+	if(ext == 'pdf'){
+		mediaItem = $(".js--templates .pdf").clone(false);
+		mediaItem
+		  .find('a')
+		    .attr('href', path)
+		    .attr('title', data.name)
+		    .attr('target', '_blank')
+		    .append(data.name)
+		  .end()
+		  .addClass('no-position')
+		  .attr('id', id)
+		  .css({
+		  	"zIndex": zIndex
+		  });
+	}
+
+
+	$('.medias-list').prepend(mediaItem);
+	  
+  //draggable media
+  mediaItem.draggable({
+    start: function() {
+    	zIndex ++;
+    },
+    drag: function(event) {
+    	// console.log(event);
+    	var offset = $(this).offset();
+      var posX = offset.left;
+      var posY = offset.top;
+    	socket.emit("dragMediaPos", {x: posX, y:posY,  z:zIndex, id:id});
+    },
+    stop: function() {
+
+    }
+  });
 }
 
 function onMediaPosition(mouse){

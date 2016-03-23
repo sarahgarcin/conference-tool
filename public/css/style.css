@@ -6770,6 +6770,8 @@ input {
   width: 20%;
   position: absolute;
   display: none; }
+  .medias-list li img, .medias-list li video {
+    width: 100%; }
 
 .ligne {
   width: 1px;
@@ -6779,3 +6781,6 @@ input {
   top: 0;
   left: 50%;
   z-index: 0; }
+
+.js--templates {
+  display: none; }
