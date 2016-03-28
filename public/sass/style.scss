@@ -14,6 +14,7 @@ html {
 
 body,html {
 	height:100%;
+	font-family: 'nanook', serif;
 }
 
 li{list-style: none;}
@@ -48,12 +49,38 @@ input{
 
 .ligne{
 	width: 1px;
-	border-left: 2px dashed #000;
+	border-left: 1px dashed #A19C9F;
 	height:100%;
 	position:fixed;
 	top:0;
 	left:50%;
 	z-index:0;
+}
+
+.titre{
+	position: absolute;
+	top: 50%;
+	left:50%;
+	transform: translateY(-50%);
+	transform: translateX(-50%);
+	h1{
+		text-transform: uppercase;
+		font-size: 6em;
+	}
+	h1,h2,h3{
+		text-align:center;
+		font-family: 'nanook', serif;
+	}
+}
+
+.elif{
+	position: absolute;
+	top: 10px;
+	right:10px;
+	h3{
+	text-align:center;
+	font-family: 'nanook', serif;
+	}
 }
 
 .js--templates{

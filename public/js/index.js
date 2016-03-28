@@ -62,7 +62,7 @@ function onListMedias(data){
 	var ext = data.name.split('.').pop();
 	var mediaItem;
 
-	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif"){
+	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif" || ext == "JPG"){
 		mediaItem = $(".js--templates .image").clone(false);
 		mediaItem
 		  .find( 'img')
@@ -143,7 +143,7 @@ function onNewMedia(data){
 	var ext = data.name.split('.').pop();
 	var mediaItem;
 	
-	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif"){
+	if(ext == 'jpg' || ext == "jpeg" || ext == "png" || ext == "gif" || ext == "JPG"){
 		mediaItem = $(".js--templates .image").clone(false);
 		mediaItem
 		  .find( 'img')
