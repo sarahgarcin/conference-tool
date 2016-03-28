@@ -6769,7 +6769,8 @@ li {
 body {
   margin: 0;
   color: #000;
-  font-size: 1em; }
+  font-size: 1em;
+  overflow: hidden; }
 
 input {
   opacity: 0; }
@@ -6785,6 +6786,10 @@ input {
   width: 20%;
   position: absolute;
   display: none; }
+  .medias-list li[data-orientation="paysage"] {
+    width: 40%; }
+  .medias-list li[data-orientation="portrait"] {
+    width: 25%; }
   .medias-list li img, .medias-list li video {
     width: 100%; }
 
@@ -6798,14 +6803,17 @@ input {
   z-index: 0; }
 
 .titre {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translateY(-50%);
-  transform: translateX(-50%); }
-  .titre h1 {
-    text-transform: uppercase;
-    font-size: 6em; }
+  position: relative;
+  top: 70%; }
+  .titre .titre-wrapper {
+    margin: auto;
+    text-align: center; }
+    .titre .titre-wrapper h1 {
+      text-transform: uppercase;
+      font-size: 6em;
+      display: inline-block;
+      vertical-align: top;
+      width: 50%; }
   .titre h1, .titre h2, .titre h3 {
     text-align: center;
     font-family: 'nanook', serif; }
@@ -6814,8 +6822,8 @@ input {
   position: absolute;
   top: 10px;
   right: 10px; }
-  .elif h3 {
-    text-align: center;
+  .elif h2, .elif h3 {
+    text-align: right;
     font-family: 'nanook', serif; }
 
 .js--templates {

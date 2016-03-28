@@ -44,7 +44,22 @@ module.exports = function(app, io){
 			}	
 		});
 
-
+		socket.on("clearPad", function(){
+			var jsonFile = 'uploads/lyon.json';
+			var data = fs.readFileSync(jsonFile,"UTF-8");
+			var jsonObj = JSON.parse(data);
+			jsonObj["files"].length = 0;
+			var jsonString = JSON.stringify(jsonObj, null, 4);
+      fs.writeFile(jsonFile, jsonString, function(err) {
+        if(err) {
+            console.log(err);
+        } 
+        else {
+          console.log("remove all files");
+          io.sockets.emit("padCleared");
+        }
+      });
+		});
 	});
 
 

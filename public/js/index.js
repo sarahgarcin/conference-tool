@@ -11,6 +11,7 @@ socket.on('newMedia', onNewMedia);
 socket.on('mediaPosition', onMediaPosition);
 socket.on('mediaDragPosition', onMediaDragPosition);
 socket.on('mediaDragPositionForAll', onMediaDragPositionForAll);
+socket.on('padCleared', padCleared);
 
 jQuery(document).ready(function($) {
 
@@ -22,7 +23,6 @@ jQuery(document).ready(function($) {
 function init(){
 
 	$(window).on('dragover',function(e){
-		console.log('test');
 		e.preventDefault();
 		e.stopPropagation();
 		return false;
@@ -37,20 +37,25 @@ function init(){
 		e.preventDefault();
 		
     var files = e.originalEvent.dataTransfer.files;
-    console.log(files);
     processFileUpload(files); 
     //file data to display it correctly
     var mediaX = e.offsetX;
  		var mediaY = e.offsetY;
  		var id = convertToSlug(files[0].name);
  		zIndex ++;
- 		var randomRot = Math.floor((Math.random() * 60) - 30);
+ 		var randomRot = Math.floor((Math.random() * 40) - 15);
  		console.log(mediaX, mediaY, id, zIndex, randomRot);
     setTimeout(function(){
 			socket.emit("dropPosition", {mediaX:mediaX, mediaY:mediaY, id:id, mediaZ: zIndex, random:randomRot});
   	},200);
   	// forward the file object to your ajax upload method
     return false;
+	});
+
+	// Clear le pad -> supprime toutes les images
+	$(document).keypress("f",function(e) {
+	  if(e.ctrlKey)
+	    socket.emit("clearPad");
 	});
 
 }
@@ -117,7 +122,19 @@ function onListMedias(data){
   $('.medias-list').prepend(mediaItem);
 
   //imageRatio(mediaItem);
-  
+  mediaItem.each(function(){
+  	var mediaW = $(this).width();
+		var mediaH = $(this).height();
+		console.log(mediaW, mediaH);
+		var orientation;
+		if(mediaW > mediaH){
+			orientation = "paysage";
+		}
+		else{
+			orientation = "portrait";
+		}
+  	$(this).attr("data-orientation", orientation);
+  });
   //draggable media
   mediaItem.draggable({
     start: function() {
@@ -207,6 +224,17 @@ function onNewMedia(data){
 }
 
 function onMediaPosition(mouse){
+	var mediaW = $(".medias-list li.no-position").width();
+	var mediaH = $(".medias-list li.no-position").height();
+	var orientation;
+
+	if(mediaW > mediaH){
+		orientation = "paysage";
+	}
+	else{
+		orientation = "portrait";
+	}
+
 	$(".medias-list li.no-position")
 		.css({
 			"top": mouse.mediaY,
@@ -217,6 +245,7 @@ function onMediaPosition(mouse){
 		})
 		.removeClass('no-position')
 		.attr("data-index", mouse.mediaZ)
+		.attr("data-orientation", orientation)
 	;
 	socket.emit('takeScreenShot');
 	
@@ -235,6 +264,10 @@ function onMediaDragPositionForAll(pos){
 	.css({
   	"z-index":pos.z,
 	});	
+}
+
+function padCleared(){
+	location.reload();
 }
 
 /* sockets */
