@@ -23,6 +23,7 @@ jQuery(document).ready(function($) {
 function init(){
 
 	$(window).on('dragover',function(e){
+		$(".drop-files-container").css("z-index","9999");
 		e.preventDefault();
 		e.stopPropagation();
 		return false;
@@ -35,7 +36,7 @@ function init(){
 
 	$(".drop-files-container").on("drop", function(e) {
 		e.preventDefault();
-		
+		console.log("DROP FILE");
     var files = e.originalEvent.dataTransfer.files;
     processFileUpload(files); 
     //file data to display it correctly
@@ -52,7 +53,7 @@ function init(){
     return false;
 	});
 
-	// Clear le pad -> supprime toutes les images
+	// ctrl + f -> Clear le pad -> supprime toutes les images
 	$(document).keypress("f",function(e) {
 	  if(e.ctrlKey)
 	    socket.emit("clearPad");
@@ -121,11 +122,12 @@ function onListMedias(data){
 
   $('.medias-list').prepend(mediaItem);
 
-  //imageRatio(mediaItem);
-  mediaItem.each(function(){
-  	var mediaW = $(this).width();
-		var mediaH = $(this).height();
-		console.log(mediaW, mediaH);
+  // ajouter un attribut paysage ou portrait pour définir une taille rationnelle
+  setTimeout(function(){
+	  //console.log(mediaItem.find('img')[0].naturalWidth, mediaItem.find('img')[0].naturalHeight);
+		var mediaW = mediaItem.find('img')[0].naturalWidth;
+		var mediaH = mediaItem.find('img')[0].naturalHeight;
+		//console.log(mediaW, mediaH);
 		var orientation;
 		if(mediaW > mediaH){
 			orientation = "paysage";
@@ -133,8 +135,11 @@ function onListMedias(data){
 		else{
 			orientation = "portrait";
 		}
-  	$(this).attr("data-orientation", orientation);
-  });
+		mediaItem.attr("data-orientation", orientation);
+  }, 500);
+
+
+
   //draggable media
   mediaItem.draggable({
     start: function() {
@@ -224,6 +229,7 @@ function onNewMedia(data){
 }
 
 function onMediaPosition(mouse){
+	$(".drop-files-container").css("z-index", -1);
 	var mediaW = $(".medias-list li.no-position").width();
 	var mediaH = $(".medias-list li.no-position").height();
 	var orientation;
@@ -255,7 +261,8 @@ function onMediaDragPosition(pos){
 	$(".medias-list li#"+pos.id)
 		.css({
 			"top": pos.y,
-	  	"left":pos.x
+	  	"left":pos.x,
+	  	"z-index":pos.z
 		});	
 }
 
@@ -281,33 +288,6 @@ function onSocketError(reason) {
 };
 
 
-function imageRatio($element){
-	$element.each(function() {
-    var maxWidth = 200; // Max width for the image
-    var maxHeight = 200;    // Max height for the image
-    var ratio = 0;  // Used for aspect ratio
-    var width = $(this).width();    // Current image width
-    var height = $(this).height();  // Current image height
-
-    // Check if the current width is larger than the max
-    if(width > maxWidth){
-        ratio = maxWidth / width;   // get ratio for scaling image
-        $(this).css("width", maxWidth); // Set new width
-        $(this).css("height", height * ratio);  // Scale height based on ratio
-        height = height * ratio;    // Reset height to match scaled image
-        width = width * ratio;    // Reset width to match scaled image
-    }
-
-    // Check if current height is larger than max
-    if(height > maxHeight){
-        ratio = maxHeight / height; // get ratio for scaling image
-        $(this).css("height", maxHeight);   // Set new height
-        $(this).css("width", width * ratio);    // Scale width based on ratio
-        width = width * ratio;    // Reset width to match scaled image
-        height = height * ratio;    // Reset height to match scaled image
-    }
-  });
-}
 
 function processFileUpload(droppedFiles) {
   // add your files to the regular upload form
@@ -315,11 +295,12 @@ function processFileUpload(droppedFiles) {
   if(droppedFiles.length > 0) { // checks if any files were dropped
     for(var f = 0; f < droppedFiles.length; f++) { // for-loop for each file dropped
       uploadFormData.append("files[]",droppedFiles[f]);  // adding every file to the form so you could upload multiple files
+    	console.log(droppedFiles[f]);
     }
   }
 
-// the final ajax call
 
+	// the final ajax call
  $.ajax({
   url : "/file-upload", // use your target
   type : "POST",

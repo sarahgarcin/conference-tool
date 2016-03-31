@@ -22,7 +22,7 @@ module.exports = function(app, io){
 		
 		socket.on('dragMediaPos', function(pos){
 			socket.broadcast.emit("mediaDragPosition", pos);
-			socket.emit("mediaDragPositionForAll", pos);
+			io.sockets.emit("mediaDragPositionForAll", pos);
 			//Save position in json
 		  var jsonFile = 'uploads/lyon.json';
 	    var data = fs.readFileSync(jsonFile,"UTF-8");
@@ -92,6 +92,7 @@ module.exports = function(app, io){
 		  	jsonObj["files"][i]["yPos"] = mouse.mediaY;
 		  	jsonObj["files"][i]["zPos"] = mouse.mediaZ;
 		  	jsonObj["files"][i]["random"] = mouse.random;
+		  	console.log(jsonObj);
 		  	var jsonString = JSON.stringify(jsonObj, null, 4);
 	      fs.writeFile(jsonFile, jsonString, function(err) {
 	        if(err) {

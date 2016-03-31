@@ -20,10 +20,12 @@ module.exports = function(app,io,m){
 
   // GET
   function getIndex(req, res) {
-    res.render("index", {title : "Conférence Lyon"});
+    res.render("index", {title : "elif - 29 mars 2016"});
   };
 
   function postFile(req, res) {
+    console.log("------ Requête reçue ! -----");
+    console.log(req.files);
     for(var i= 0; i<req.files.files.length; i++){
       if(req.files.files[i].size > 0){
         var name = req.files.files[i].name;
