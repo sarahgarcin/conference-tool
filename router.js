@@ -12,6 +12,7 @@ module.exports = function(app,io,m){
   * routing event
   */
   app.get("/", getIndex);
+  app.get("/:conf", getConf);
   app.post("/file-upload", multipartMiddleware, postFile);
 
   /**
@@ -20,8 +21,21 @@ module.exports = function(app,io,m){
 
   // GET
   function getIndex(req, res) {
-    res.render("index", {title : "elif - 29 mars 2016"});
+    var pageTitle = "Baking Projects";
+    // console.log(req);
+    res.render("index", {title : pageTitle});
   };
+
+  function getConf(req, res) {
+    var pageTitle = "Baking Projects";
+    // console.log(req);
+    res.render("conf", {title : pageTitle});
+    // res.render("index", {title : pageTitle});
+  };
+
+  // function getIndex(req, res) {
+  //   res.render("index", {title : "elif - 29 mars 2016"});
+  // };
 
   function postFile(req, res) {
     console.log("------ Requête reçue ! -----");
